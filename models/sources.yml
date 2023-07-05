@@ -8,20 +8,11 @@ sources:
       - name: dim_date_hours
       - name: address_tags
       - name: dim_dates
-
   - name: bronze_streamline
     database: streamline
-
     schema: |
       {{ "AURORA_DEV" if var("STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES", False) else "AURORA" }}
     tables:
       - name: blocks
       - name: transactions
-      - name: tx_receipts
-
-  - name: streamline
-    database: streamline
-    schema: |
-      {{ "AURORA_DEV" if var("STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES", False) else "AURORA" }}
-    tables:
       - name: tx_receipts

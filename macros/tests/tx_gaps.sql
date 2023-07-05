@@ -1,4 +1,4 @@
-{% test tx_gaps(
+{% macro tx_gaps(
         model
     ) %}
     WITH block_base AS (
@@ -30,4 +30,4 @@ FROM
     ON block_base.block_id = model_name.block_id
 WHERE
     tx_count <> model_tx_count
-{% endtest %}
+{% endmacro %}
