@@ -19,9 +19,9 @@ SELECT
     tx_success,
     tx_status,
     tx_hash,
-    position,
-    type,
+    POSITION,
+    TYPE,
     near_receipt_hash,
     near_transaction_hash
 FROM
-    {{target.database}}.silver.receipts_copy
+    {{ ref('silver__receipts') }}

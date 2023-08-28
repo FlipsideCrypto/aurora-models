@@ -20,4 +20,4 @@ SELECT
     tx_status,
     _log_id
 FROM
-    {{target.database}}.silver.logs_copy
+    {{ ref('silver__logs') }}

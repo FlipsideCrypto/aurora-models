@@ -30,4 +30,4 @@ SELECT
     v,
     tx_type
 FROM
-    {{target.database}}.silver.transactions_copy
+    {{ ref('silver__transactions') }}

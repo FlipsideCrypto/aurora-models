@@ -63,4 +63,4 @@ SELECT
         uncles
     ) AS block_header_json
 FROM
-    {{target.database}}.silver.blocks_copy
+    {{ ref('silver__blocks') }}
