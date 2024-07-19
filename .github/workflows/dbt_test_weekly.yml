@@ -20,8 +20,7 @@ env:
   SCHEMA: "${{ vars.SCHEMA }}"
   SLACK_WEBHOOK_URL: "${{ secrets.SLACK_WEBHOOK_URL }}"
 
-concurrency:
-  group: ${{ github.workflow }}
+
 
 jobs:
   run_dbt_jobs:
