@@ -18,6 +18,10 @@ env:
   DATABASE: "${{ vars.DATABASE }}"
   WAREHOUSE: "${{ vars.TEST_WAREHOUSE }}"
   SCHEMA: "${{ vars.SCHEMA }}"
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
   SLACK_WEBHOOK_URL: "${{ secrets.SLACK_WEBHOOK_URL }}"
 
 
