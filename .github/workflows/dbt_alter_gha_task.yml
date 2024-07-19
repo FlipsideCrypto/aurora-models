@@ -27,6 +27,10 @@ env:
   REGION: "${{ vars.REGION }}"
   DATABASE: "${{ vars.DATABASE }}"
   SCHEMA: "${{ vars.SCHEMA }}"
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
   WAREHOUSE: "${{ vars.WAREHOUSE }}"
 
 jobs:
