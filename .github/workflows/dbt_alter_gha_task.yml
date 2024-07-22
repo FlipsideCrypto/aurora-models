@@ -27,11 +27,11 @@ env:
   REGION: "${{ vars.REGION }}"
   DATABASE: "${{ vars.DATABASE }}"
   SCHEMA: "${{ vars.SCHEMA }}"
+  WAREHOUSE: "${{ vars.WAREHOUSE }}"
 
 concurrency:
   group: ${{ github.workflow }}
-  cancel-in-progress: true
-  WAREHOUSE: "${{ vars.WAREHOUSE }}"
+  cancel-in-progress: false
 
 jobs:
   run_dbt_jobs:
