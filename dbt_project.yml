@@ -38,6 +38,8 @@ models:
     relation: true
     columns: true
   +on_schema_change: "append_new_columns"
+  aurora_models:
+    +pre-hook: '{{ fsc_utils.set_query_tag() }}' 
 
 vars:
   "dbt_date:time_zone": GMT
@@ -49,6 +51,12 @@ vars:
   WAIT: 0
   OBSERV_FULL_TEST: False
   START_GHA_TASKS: False
+  core_folders: [
+    'silver/core',
+    'gold/core',
+    'bronze/core',  
+    'silver/streamline'
+  ]
 
 tests:
   +store_failures: true # all tests
