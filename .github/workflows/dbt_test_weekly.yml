@@ -48,6 +48,9 @@ jobs:
           dbt test --exclude tag:recent_test --models tag:full_test
         continue-on-error: true
 
-      - name: Log test results
-        run: |
-          python python_scripts/test_alert/dbt_test_alert.py
+  notify-failure:
+    needs: [run_dbt_jobs]
+    if: failure()
+    uses: ./.github/workflows/slack_notify.yml
+    secrets:
+      EVM_SLACK_WEBHOOK_URL: ${{ secrets.EVM_SLACK_WEBHOOK_URL }}
