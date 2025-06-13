@@ -20,8 +20,8 @@ sources:
       - name: traces
       - name: blocks_v2
       - name: transactions_v2
-      - name: receipts_v2
-      - name: traces_v2
+      - name: receipts_by_hash
+      - name: traces_by_hash
 
   - name: silver_crosschain
     database: "{{ 'crosschain' if target.database == 'FLOW' else 'crosschain_dev' }}"
