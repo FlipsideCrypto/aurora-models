@@ -1,4 +1,4 @@
--- depends_on: {{ ref('bronze__streamline_blocks') }}
+-- depends_on: {{ ref('bronze__blocks') }}
 {{ config (
     materialized = "incremental",
     unique_key = "id",
@@ -14,7 +14,7 @@ SELECT
 FROM
 
 {% if is_incremental() %}
-{{ ref('bronze__streamline_blocks') }}
+{{ ref('bronze__blocks') }}
 WHERE
     _inserted_timestamp >= (
         SELECT
@@ -24,7 +24,7 @@ WHERE
     )
     AND DATA != []
 {% else %}
-    {{ ref('bronze__streamline_FR_blocks') }}
+    {{ ref('bronze__blocks_fr') }}
 WHERE
     DATA != []
 {% endif %}

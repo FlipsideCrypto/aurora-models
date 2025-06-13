@@ -1,4 +1,4 @@
--- depends_on: {{ ref('bronze__streamline_tx_receipts') }}
+-- depends_on: {{ ref('bronze__receipts') }}
 {{ config (
     materialized = "incremental",
     unique_key = "id",
@@ -12,7 +12,7 @@ SELECT
 FROM
 
 {% if is_incremental() %}
-{{ ref('bronze__streamline_tx_receipts') }}
+{{ ref('bronze__receipts') }}
 WHERE
     _inserted_timestamp >= (
         SELECT
@@ -22,7 +22,7 @@ WHERE
     )
     AND tx_hash IS NOT NULL
 {% else %}
-    {{ ref('bronze__streamline_FR_tx_receipts') }}
+    {{ ref('bronze__receipts_fr') }}
 WHERE
     tx_hash IS NOT NULL
 {% endif %}
