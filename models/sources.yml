@@ -11,7 +11,6 @@ sources:
 
   - name: bronze_streamline
     database: streamline
-
     schema: |
       {{ "AURORA_DEV" if var("STREAMLINE_USE_DEV_FOR_EXTERNAL_TABLES", False) else "AURORA" }}
     tables:
@@ -19,6 +18,10 @@ sources:
       - name: transactions
       - name: tx_receipts
       - name: traces
+      - name: blocks_v2
+      - name: transactions_v2
+      - name: receipts_by_hash
+      - name: traces_by_hash
 
   - name: silver_crosschain
     database: "{{ 'crosschain' if target.database == 'FLOW' else 'crosschain_dev' }}"

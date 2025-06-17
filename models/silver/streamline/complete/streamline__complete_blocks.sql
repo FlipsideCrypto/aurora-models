@@ -1,20 +1,25 @@
--- depends_on: {{ ref('bronze__streamline_blocks') }}
+-- depends_on: {{ ref('bronze__blocks') }}
 {{ config (
     materialized = "incremental",
     unique_key = "id",
     cluster_by = "ROUND(block_number, -3)",
-    post_hook = "ALTER TABLE {{ this }} ADD SEARCH OPTIMIZATION on equality(id)"
+    post_hook = "ALTER TABLE {{ this }} ADD SEARCH OPTIMIZATION on equality(id)",
+    tags = ['streamline_core_evm_realtime']
 ) }}
 
 SELECT
-    id,
+    MD5(
+        CAST(
+            COALESCE(CAST(block_number AS text), '' :: STRING) AS text
+        )
+    ) AS id,
     block_number,
     _inserted_timestamp,
     DATA :result :transactions AS transactions
 FROM
 
 {% if is_incremental() %}
-{{ ref('bronze__streamline_blocks') }}
+{{ ref('bronze__blocks') }}
 WHERE
     _inserted_timestamp >= (
         SELECT
@@ -24,7 +29,7 @@ WHERE
     )
     AND DATA != []
 {% else %}
-    {{ ref('bronze__streamline_FR_blocks') }}
+    {{ ref('bronze__blocks_fr') }}
 WHERE
     DATA != []
 {% endif %}

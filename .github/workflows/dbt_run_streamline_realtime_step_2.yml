@@ -1,11 +1,11 @@
-name: dbt_run_streamline_traces_history
-run-name: dbt_run_streamline_traces_history
+name: dbt_run_streamline_realtime_step_2
+run-name: dbt_run_streamline_realtime_step_2
 
 on:
   workflow_dispatch:
-  schedule:
-    # Run every 2 hours
-    - cron: "0 */2 * * *"
+  # schedule:
+  #   # Runs every 10 minutes
+  #   - cron: "0,10,20,30,40,50 * * * *"
 
 env:
   USE_VARS: "${{ vars.USE_VARS }}"
@@ -45,7 +45,7 @@ jobs:
 
       - name: Run DBT Jobs
         run: |
-          dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True}' -m 1+models/silver/streamline/history/streamline__traces_history.sql
+          dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True}' -m tag:streamline_core_evm_realtime_step_2
 
       - name: Store logs
         uses: actions/upload-artifact@v4

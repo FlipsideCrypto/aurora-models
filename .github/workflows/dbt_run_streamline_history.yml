@@ -42,7 +42,7 @@ jobs:
 
       - name: Run DBT Jobs
         run: |
-          dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True, "STREAMLINE_RUN_HISTORY":True}' -m 1+models/silver/streamline/realtime/ --full-refresh
+          dbt run --vars '{"STREAMLINE_INVOKE_STREAMS":True}' -m tag:streamline_core_evm_history
 
       - name: Store logs
         uses: actions/upload-artifact@v4

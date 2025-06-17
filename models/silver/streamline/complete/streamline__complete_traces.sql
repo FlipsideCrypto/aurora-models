@@ -1,20 +1,25 @@
--- depends_on: {{ ref('bronze__streamline_traces') }}
+-- depends_on: {{ ref('bronze__traces') }}
 {{ config (
     materialized = "incremental",
     unique_key = "id",
     cluster_by = "ROUND(block_number, -3)",
-    post_hook = "ALTER TABLE {{ this }} ADD SEARCH OPTIMIZATION on equality(id)"
+    post_hook = "ALTER TABLE {{ this }} ADD SEARCH OPTIMIZATION on equality(id)",
+    tags = ['streamline_core_evm_realtime_step_2']
 ) }}
 
 SELECT
-    id,
+    MD5(
+        CAST(
+            COALESCE(CAST(CONCAT(block_number, '_-_', COALESCE(tx_hash, '')) AS text), '' :: STRING) AS text
+        )
+    ) AS id,
     block_number,
     tx_hash,
     _inserted_timestamp
 FROM
 
 {% if is_incremental() %}
-{{ ref('bronze__streamline_traces') }}
+{{ ref('bronze__traces') }}
 WHERE
     _inserted_timestamp >= 
     (
@@ -24,7 +29,7 @@ WHERE
             {{ this }}
     )
 {% else %}
-    {{ ref('bronze__streamline_FR_traces') }}
+    {{ ref('bronze__traces_fr') }}
 {% endif %}
 
 qualify(ROW_NUMBER() over (PARTITION BY id

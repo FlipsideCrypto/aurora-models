@@ -1,4 +1,4 @@
--- depends_on: {{ ref('bronze__streamline_tx_receipts') }}
+-- depends_on: {{ ref('bronze__receipts') }}
 {{ config(
     materialized = 'incremental',
     incremental_strategy = 'delete+insert',
@@ -14,7 +14,7 @@ WITH base AS (
         _inserted_timestamp
     FROM
 {% if is_incremental() %}
-{{ ref('bronze__streamline_tx_receipts') }}
+{{ ref('bronze__receipts') }}
 WHERE
     _inserted_timestamp >= (
         SELECT
@@ -26,7 +26,7 @@ WHERE
         DATA
     )
 {% else %}
-    {{ ref('bronze__streamline_FR_tx_receipts') }}
+    {{ ref('bronze__receipts_fr') }}
 WHERE
     IS_OBJECT(
         DATA

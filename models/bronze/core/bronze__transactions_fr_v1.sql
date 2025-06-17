@@ -10,7 +10,8 @@ WITH meta AS (
         CAST(SPLIT_PART(SPLIT_PART(file_name, '/', 4), '_', 1) AS INTEGER) AS _partition_by_block_id
     FROM
         TABLE(
-            information_schema.external_table_files(
+            information_schema.external_table_file_registration_history(
+                start_time => GREATEST(DATEADD('day', -1, CURRENT_TIMESTAMP), '2023-08-01 18:44:00.000' :: timestamp_ntz),
                 table_name => '{{ source( "bronze_streamline", "transactions") }}'
             )
         ) A
@@ -20,6 +21,8 @@ tbl AS (
         block_number,
         COALESCE(s.data :hash :: STRING, s.data :result :hash :: STRING) AS tx_hash,
         _inserted_timestamp,
+        metadata,
+        file_name,
         s._partition_by_block_id,
         s.value AS VALUE,
         s.data AS DATA
@@ -69,8 +72,12 @@ SELECT
             ) AS text
         )
     ) AS id,
+    data,
+    metadata,
+    file_name,
     _partition_by_block_id,
-    COALESCE(f.value, tbl.data) AS VALUE
+    _inserted_timestamp,
+    COALESCE(f.value, tbl.data:result, tbl.data) AS VALUE
 FROM
     tbl,
     LATERAL FLATTEN(

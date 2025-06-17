@@ -1,23 +1,71 @@
-{% macro create_udf_get_chainhead() %}
-    {% if target.name == "prod" %}
-        CREATE OR REPLACE EXTERNAL FUNCTION streamline.udf_get_chainhead() returns variant api_integration = aws_aurora_api AS 
-            'https://sl2f5beopl.execute-api.us-east-1.amazonaws.com/prod/get_chainhead'
+{% macro create_udf_bulk_rest_api_v2() %}    
+    {{ log("Creating udf udf_bulk_rest_api for target:" ~ target.name ~ ", schema: " ~ target.schema ~ ", DB: " ~ target.database, info=True) }}
+    {{ log("role:" ~ target.role ~ ", user:" ~ target.user, info=True) }}
+
+    {% set sql %}
+    CREATE OR REPLACE EXTERNAL FUNCTION streamline.udf_bulk_rest_api_v2(json object) returns array api_integration = 
+    {% if target.name == "prod" %} 
+        {{ log("Creating prod udf_bulk_rest_api_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}udf_bulk_rest_api'
+    {% elif target.name == "dev" %}
+        {{ log("Creating dev udf_bulk_rest_api_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}udf_bulk_rest_api'
+    {% elif  target.name == "sbx" %}
+        {{ log("Creating stg udf_bulk_rest_api_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}udf_bulk_rest_api'
     {% else %}
-        CREATE OR REPLACE EXTERNAL FUNCTION streamline.udf_get_chainhead() returns variant api_integration = aws_aurora_dev_api AS 
-            'https://xh409mek2a.execute-api.us-east-1.amazonaws.com/dev/get_chainhead'  
-    {%- endif %};
+        {{ log("Creating default (dev) udf_bulk_rest_api_v2", info=True) }}
+        {{ var("config")["dev"]["API_INTEGRATION"] }} AS 'https://{{ var("config")["dev"]["EXTERNAL_FUNCTION_URI"] | lower }}udf_bulk_rest_api'
+    {% endif %};
+    {% endset %}
+    {{ log(sql, info=True) }}
+    {% do adapter.execute(sql) %}
 {% endmacro %}
 
-{% macro create_udf_json_rpc() %}
-    {% if target.name == "prod" %}
-        CREATE OR REPLACE EXTERNAL FUNCTION streamline.udf_json_rpc(
-            json OBJECT
-        ) returns ARRAY api_integration = aws_aurora_api AS 
-            'https://sl2f5beopl.execute-api.us-east-1.amazonaws.com/prod/bulk_get_json_rpc'
+{% macro create_udf_bulk_decode_logs() %}    
+    {{ log("Creating udf udf_bulk_decode_logs_v2 for target:" ~ target.name ~ ", schema: " ~ target.schema ~ ", DB: " ~ target.database, info=True) }}
+    {{ log("role:" ~ target.role ~ ", user:" ~ target.user, info=True) }}
+
+    {% set sql %}
+    CREATE OR REPLACE EXTERNAL FUNCTION streamline.udf_bulk_decode_logs_v2(json object) returns array api_integration = 
+    {% if target.name == "prod" %} 
+        {{ log("Creating prod udf_bulk_decode_logs_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}bulk_decode_logs'
+    {% elif target.name == "dev" %}
+        {{ log("Creating dev udf_bulk_decode_logs_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}bulk_decode_logs'
+    {% elif  target.name == "sbx" %}
+        {{ log("Creating stg udf_bulk_decode_logs_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}bulk_decode_logs'
     {% else %}
-        CREATE OR REPLACE EXTERNAL FUNCTION streamline.udf_json_rpc(
-            json OBJECT
-        ) returns ARRAY api_integration = aws_aurora_dev_api AS 
-            'https://xh409mek2a.execute-api.us-east-1.amazonaws.com/dev/bulk_get_json_rpc'
-    {%- endif %};
+        {{ log("Creating default (dev) udf_bulk_decode_logs_v2", info=True) }}
+        {{ var("config")["dev"]["API_INTEGRATION"] }} AS 'https://{{ var("config")["dev"]["EXTERNAL_FUNCTION_URI"] | lower }}bulk_decode_logs'
+    {% endif %};
+    {% endset %}
+    {{ log(sql, info=True) }}
+    {% do adapter.execute(sql) %}
+{% endmacro %}
+
+{% macro create_udf_bulk_decode_traces() %}    
+    {{ log("Creating udf udf_bulk_decode_traces_v2 for target:" ~ target.name ~ ", schema: " ~ target.schema ~ ", DB: " ~ target.database, info=True) }}
+    {{ log("role:" ~ target.role ~ ", user:" ~ target.user, info=True) }}
+
+    {% set sql %}
+    CREATE OR REPLACE EXTERNAL FUNCTION streamline.udf_bulk_decode_traces_v2(json object) returns array api_integration = 
+    {% if target.name == "prod" %} 
+        {{ log("Creating prod udf_bulk_decode_traces_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}bulk_decode_traces'
+    {% elif target.name == "dev" %}
+        {{ log("Creating dev udf_bulk_decode_traces_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}bulk_decode_traces'
+    {% elif  target.name == "sbx" %}
+        {{ log("Creating stg udf_bulk_decode_traces_v2", info=True) }}
+        {{ var("API_INTEGRATION") }} AS 'https://{{ var("EXTERNAL_FUNCTION_URI") | lower }}bulk_decode_traces'
+    {% else %}
+        {{ log("Creating default (dev) udf_bulk_decode_traces_v2", info=True) }}
+        {{ var("config")["dev"]["API_INTEGRATION"] }} AS 'https://{{ var("config")["dev"]["EXTERNAL_FUNCTION_URI"] | lower }}bulk_decode_traces'
+    {% endif %};
+    {% endset %}
+    {{ log(sql, info=True) }}
+    {% do adapter.execute(sql) %}
 {% endmacro %}

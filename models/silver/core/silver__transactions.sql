@@ -1,10 +1,10 @@
--- depends_on: {{ ref('bronze__streamline_transactions') }}
+-- depends_on: {{ ref('bronze__transactions') }}
 {{ config(
     materialized = 'incremental',
     incremental_strategy = 'delete+insert',
     unique_key = "tx_id",
     cluster_by = "block_timestamp::date, _inserted_timestamp::date",
-    tags = ['core']
+    tags = ['core','streamline_core_evm_realtime']
 ) }}
 
 WITH base AS (
@@ -16,7 +16,7 @@ WITH base AS (
     FROM
 
 {% if is_incremental() %}
-{{ ref('bronze__streamline_transactions') }}
+{{ ref('bronze__transactions') }}
 WHERE
     _inserted_timestamp >= (
         SELECT
@@ -26,7 +26,7 @@ WHERE
     )
     AND IS_OBJECT(DATA)
 {% else %}
-    {{ ref('bronze__streamline_FR_transactions') }}
+    {{ ref('bronze__transactions_fr') }}
 WHERE
     IS_OBJECT(DATA)
 {% endif %}
