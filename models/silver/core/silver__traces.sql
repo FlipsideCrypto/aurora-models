@@ -2,7 +2,7 @@
 {{ config (
     materialized = "incremental",
     incremental_strategy = 'delete+insert',
-    unique_key = "block_number",
+    unique_key = "traces_id",
     cluster_by = "block_timestamp::date, _inserted_timestamp::date",
     tags = ['core']
 ) }}
@@ -407,6 +407,4 @@ SELECT
     SYSDATE() AS modified_timestamp,
     '{{ invocation_id }}' AS _invocation_id
 FROM
-    FINAL qualify(ROW_NUMBER() over(PARTITION BY block_number, tx_hash, trace_index
-ORDER BY
-    _inserted_timestamp DESC, is_pending ASC)) = 1
+    FINAL qualify(ROW_NUMBER() over(PARTITION BY traces_id ORDER BY _inserted_timestamp DESC, is_pending ASC)) = 1
