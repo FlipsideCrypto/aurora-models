@@ -13,42 +13,42 @@ SELECT
     ) }} AS block_id,
     block_number,
     utils.udf_hex_to_int(
-        DATA :result :timestamp :: STRING
+        DATA :timestamp :: STRING
     ) :: TIMESTAMP AS block_timestamp,
     ARRAY_SIZE(
-        DATA :result :transactions
+        DATA :transactions
     ) AS tx_count,
     utils.udf_hex_to_int(
-        DATA :result :difficulty :: STRING
+        DATA :difficulty :: STRING
     ) :: INT AS difficulty,
     utils.udf_hex_to_int(
-        DATA :result :totalDifficulty :: STRING
+        DATA :totalDifficulty :: STRING
     ) :: INT AS total_difficulty,
-    DATA :result :extraData :: STRING AS extra_data,
+    DATA :extraData :: STRING AS extra_data,
     utils.udf_hex_to_int(
-        DATA :result :gasLimit :: STRING
+        DATA :gasLimit :: STRING
     ) :: INT AS gas_limit,
     utils.udf_hex_to_int(
-        DATA :result :gasUsed :: STRING
+        DATA :gasUsed :: STRING
     ) :: INT AS gas_used,
-    DATA :result :miner :: STRING AS miner,
+    DATA :miner :: STRING AS miner,
     utils.udf_hex_to_int(
-        DATA :result :nonce :: STRING
+        DATA :nonce :: STRING
     ) :: INT AS nonce,
-    DATA :result :parentHash :: STRING AS parent_hash,
-    DATA :result :hash :: STRING AS HASH,
-    DATA :result :receiptsRoot :: STRING AS receipts_root,
+    DATA :parentHash :: STRING AS parent_hash,
+    DATA :hash :: STRING AS HASH,
+    DATA :receiptsRoot :: STRING AS receipts_root,
     utils.udf_hex_to_int(
-        DATA :result :number :: STRING
+        DATA :number :: STRING
     ) :: INT AS NUMBER,
-    DATA :result :sha3Uncles :: STRING AS sha3_uncles,
+    DATA :sha3Uncles :: STRING AS sha3_uncles,
     utils.udf_hex_to_int(
-        DATA :result :size :: STRING
+        DATA :size :: STRING
     ) :: INT AS SIZE,
-    DATA :result :uncles AS uncles,
-    DATA :result :logsBloom :: STRING AS logs_bloom,
-    DATA :result :stateRoot :: STRING AS state_root,
-    DATA :result :transactionsRoot :: STRING AS transactions_root,
+    DATA :uncles AS uncles,
+    DATA :logsBloom :: STRING AS logs_bloom,
+    DATA :stateRoot :: STRING AS state_root,
+    DATA :transactionsRoot :: STRING AS transactions_root,
     partition_key as _partition_by_block_id,
     _inserted_timestamp,
     SYSDATE() AS inserted_timestamp,
