@@ -5,16 +5,15 @@
 WITH meta AS (
 
     SELECT
-        job_created_time AS _inserted_timestamp,
+        last_modified AS _inserted_timestamp,
         file_name,
         CAST(SPLIT_PART(SPLIT_PART(file_name, '/', 4), '_', 1) AS INTEGER) AS _partition_by_block_id
     FROM
-        TABLE(
-            information_schema.external_table_file_registration_history(
-                start_time => GREATEST(DATEADD('day', -1, CURRENT_TIMESTAMP), '2023-08-01 18:44:00.000' :: timestamp_ntz),
-                table_name => '{{ source( "bronze_streamline", "tx_receipts") }}'
-            )
-        ) A
+            TABLE(
+                information_schema.external_table_files(
+                    table_name => '{{ source( "bronze_streamline", "tx_receipts") }}'
+                )
+            ) A
 )
 SELECT
     block_number,
@@ -26,7 +25,10 @@ SELECT
         )
     ) AS id,
     s._partition_by_block_id,
-    s.value:data:result AS VALUE
+    s.value:data:result AS VALUE,
+    data,
+    metadata,
+    file_name
 FROM
     {{ source(
         "bronze_streamline",

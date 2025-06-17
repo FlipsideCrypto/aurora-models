@@ -45,6 +45,6 @@ SELECT
     ) AS request
 from blocks
 
-order by block_number asc
+order by block_number desc
 
 limit 12000
