@@ -11,7 +11,7 @@ WITH bronze_traces AS (
 
     SELECT
         block_number,
-        VALUE :metadata :request :params [0] :: STRING AS tx_hash,
+        tx_hash,
         DATA :result AS full_traces,
         _inserted_timestamp
     FROM
