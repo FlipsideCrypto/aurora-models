@@ -4,26 +4,24 @@
         func = 'streamline.udf_bulk_rest_api_v2',
         target = "{{this.schema}}.{{this.identifier}}",
         params ={ "external_table" :'blocks_transactions',
-        "sql_limit" :"12000",
+        "sql_limit" :"120000",
         "producer_batch_size" :"12000",
         "worker_batch_size" :"4000",
         "sql_source" :'{{this.identifier}}',
         "exploded_key": tojson(['result', 'result.transactions']) }
     ),
-    tags = ['streamline_core_evm_realtime']
+    tags = ['streamline_core_evm_history']
 ) }}
 
 with blocks as (
     select 
         block_number
     from {{ ref('streamline__blocks') }}
-    where block_number >= (select block_number from {{ ref('_block_lookback') }})
     except
     select 
         block_number
     from {{ ref('streamline__complete_blocks') }}
     inner join {{ ref('streamline__complete_transactions') }} using (block_number)
-    where block_number >= (select block_number from {{ ref('_block_lookback') }})
 )
 SELECT
     block_number,
@@ -45,6 +43,6 @@ SELECT
     ) AS request
 from blocks
 
-order by block_number asc
+order by block_number desc
 
-limit 12000
+limit 120000

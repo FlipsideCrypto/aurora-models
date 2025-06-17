@@ -4,7 +4,7 @@
     incremental_strategy = 'delete+insert',
     unique_key = "block_number",
     cluster_by = "block_timestamp::date",
-    tags = ['core']
+    tags = ['core','streamline_core_evm_realtime']
 ) }}
 
 SELECT
@@ -49,7 +49,7 @@ SELECT
     DATA :result :logsBloom :: STRING AS logs_bloom,
     DATA :result :stateRoot :: STRING AS state_root,
     DATA :result :transactionsRoot :: STRING AS transactions_root,
-    _partition_by_block_id,
+    partition_key as _partition_by_block_id,
     _inserted_timestamp,
     SYSDATE() AS inserted_timestamp,
     SYSDATE() AS modified_timestamp,

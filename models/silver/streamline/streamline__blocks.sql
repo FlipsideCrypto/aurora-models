@@ -1,6 +1,6 @@
 {{ config (
     materialized = "view",
-    tags = ['streamline','core','chainhead','phase_1']
+    tags = ['streamline_core_evm_realtime']
 ) }}
 
 SELECT

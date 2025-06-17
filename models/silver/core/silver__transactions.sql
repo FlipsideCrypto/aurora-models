@@ -4,7 +4,7 @@
     incremental_strategy = 'delete+insert',
     unique_key = "tx_id",
     cluster_by = "block_timestamp::date, _inserted_timestamp::date",
-    tags = ['core']
+    tags = ['core','streamline_core_evm_realtime']
 ) }}
 
 WITH base AS (

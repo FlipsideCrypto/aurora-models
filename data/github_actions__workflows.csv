@@ -1,5 +1,5 @@
 workflow_name,workflow_schedule
 dbt_run_streamline_realtime_blocks_transactions,"12,42 * * * *"
-dbt_run_streamline_realtime_tx_receipts,"17,47 * * * *"
+dbt_run_streamline_realtime_step_2,"20,52 * * * *"
 dbt_run_scheduled,"25,55 * * * *"
 dbt_test_tasks,"28,58 * * * *"

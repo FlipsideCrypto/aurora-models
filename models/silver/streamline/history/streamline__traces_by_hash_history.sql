@@ -5,13 +5,13 @@
         target = "{{this.schema}}.{{this.identifier}}",
         params ={ 
             "external_table" :'traces_by_hash',
-            "sql_limit" :"12000",
+            "sql_limit" :"120000",
             "producer_batch_size" :"12000",
             "worker_batch_size" :"4000",
             "sql_source" :'{{this.identifier}}' 
         }
     ),
-    tags = ['streamline_core_evm_realtime_step_2']
+    tags = ['streamline_core_evm_history']
 ) }}
 
 with txs as (
@@ -19,13 +19,11 @@ with txs as (
         block_number,
         tx_hash
     from {{ ref('silver__transactions') }}
-    where block_number >= (select block_number from {{ ref('_block_lookback') }})
     except
     select 
         block_number,
         tx_hash
     from {{ ref('streamline__complete_traces') }}
-    where block_number >= (select block_number from {{ ref('_block_lookback') }})
 )
 
 SELECT
@@ -49,6 +47,6 @@ SELECT
     ) AS request
 from txs
 
-order by block_number asc
+order by block_number desc
 
-limit 12000
+limit 120000

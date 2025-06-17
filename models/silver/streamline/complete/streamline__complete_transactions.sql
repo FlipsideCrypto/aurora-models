@@ -3,13 +3,17 @@
     materialized = "incremental",
     unique_key = "id",
     cluster_by = "ROUND(block_number, -3)",
-    post_hook = "ALTER TABLE {{ this }} ADD SEARCH OPTIMIZATION on equality(id)"
+    post_hook = "ALTER TABLE {{ this }} ADD SEARCH OPTIMIZATION on equality(id)",
+    tags = ['streamline_core_evm_realtime']
 ) }}
 
 SELECT
-    id,
+    MD5(
+        CAST(
+            COALESCE(CAST(block_number AS text), '' :: STRING) AS text
+        )
+    ) AS id,
     block_number,
-    tx_hash,
     _inserted_timestamp
 FROM
 

@@ -46,7 +46,6 @@ jobs:
       - name: Run DBT Jobs
         run: |
           dbt test --exclude tag:recent_test --models tag:full_test
-        continue-on-error: true
 
   notify-failure:
     needs: [run_dbt_jobs]

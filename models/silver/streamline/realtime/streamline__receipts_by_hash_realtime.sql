@@ -4,17 +4,31 @@
         func = 'streamline.udf_bulk_rest_api_v2',
         target = "{{this.schema}}.{{this.identifier}}",
         params ={ "external_table" :'receipts_by_hash',
-        "sql_limit" :"30000",
-        "producer_batch_size" :"30000",
-        "worker_batch_size" :"10000",
+        "sql_limit" :"12000",
+        "producer_batch_size" :"12000",
+        "worker_batch_size" :"4000",
         "sql_source" :'{{this.identifier}}' }
     ),
-    tags = ['streamline','core','realtime','phase_1']
+    tags = ['streamline_core_evm_realtime_step_2']
 ) }}
 
+with txs as (
+    select 
+        block_number,
+        tx_hash
+    from {{ ref('silver__transactions') }}
+    where block_number >= (select block_number from {{ ref('_block_lookback') }})
+    except
+    select 
+        block_number,
+        tx_hash
+    from {{ ref('streamline__complete_tx_receipts') }}
+    where block_number >= (select block_number from {{ ref('_block_lookback') }})
+)
+
 SELECT
-    150949168 as block_number,
-    '0x967586085f70584ab5e5886ba9c7d1b2f227f554ed594a491978e4a2110bfdd7' as tx_hash,
+    block_number,
+    tx_hash,
     ROUND(
         block_number,
         -3
@@ -34,3 +48,8 @@ SELECT
         ),
         'Vault/prod/evm/aurora/mainnet'
     ) AS request
+from txs
+
+order by block_number asc
+
+limit 12000
