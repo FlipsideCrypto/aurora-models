@@ -9,12 +9,12 @@ WITH meta AS (
         file_name,
         CAST(SPLIT_PART(SPLIT_PART(file_name, '/', 4), '_', 1) AS INTEGER) AS _partition_by_block_id
     FROM
-        TABLE(
-            information_schema.external_table_file_registration_history(
-                start_time => DATEADD('day', -3, CURRENT_TIMESTAMP()),
-                table_name => '{{ source( "bronze_streamline", "traces") }}')
+            TABLE(
+                information_schema.external_table_files(
+                    table_name => '{{ source( "bronze_streamline", "traces") }}'
+                )
             ) A
-        )
+    )
     SELECT
         block_number,
         s.value :metadata :request :params [0] :: STRING AS tx_hash,
@@ -26,7 +26,9 @@ WITH meta AS (
             )
         ) AS id,
         s._partition_by_block_id,
-        s.value AS VALUE
+        s.value AS VALUE,
+        metadata,
+        file_name
     FROM
         {{ source(
             "bronze_streamline",
