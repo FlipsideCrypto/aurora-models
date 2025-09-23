@@ -1,6 +1,6 @@
 {{ config (
     materialized = 'view',
-    tags = ['bronze','core','streamline_v1','phase_1']
+    tags = ['bronze','core','streamline_v2','phase_1']
 ) }}
 
 WITH meta AS (
